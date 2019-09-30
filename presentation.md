@@ -10,6 +10,7 @@ layout: true
 class: impact
 
 # {{title}}
+## Mario Fernandez
 
 ---
 
@@ -34,13 +35,31 @@ class: impact
 - caveats
 -- eslint!
 
+- testing
+
 ---
 
-## Party like it's 2018
+class: middle center
 
-picture of redux
-picture of enzyme
-picture of EcmasScript
+### It's not 2018 anymore
+
+---
+
+class: middle
+
+## Times They Are a-Changin
+
+.col-4[
+![ts](images/ts.png)
+]
+
+.col-4[
+![formik](images/formik.png)
+]
+
+.col-4[
+![react-testing-library](images/react-testing-library.png)
+]
 
 ---
 
@@ -60,7 +79,37 @@ Released on February 6th, 2019
 
 ---
 
-useState example
+class: center middle
+
+### Hooks are just functions
+
+---
+
+class: middle
+
+## useState
+
+```typescript
+import React, { useState } from 'react'
+
+const Counter = () => {
+  const [count, setCount] = useState<number>(0)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  )
+}
+```
+
+???
+
+- straight out of the React docs
+- value + function
 
 ---
 
@@ -78,7 +127,16 @@ class: center middle
 
 - Stylistic reasons
 - tree shaking
-- lifecycle methods
+
+---
+
+class: center middle
+
+### Does anybody truly understand lifecycle methods?
+
+???
+
+- lifecycle methods seem like the most complex part of React
 
 ---
 
@@ -97,10 +155,66 @@ class: impact
 
 # useEffect
 
+???
+
+- perform side effects
+- alternative to:
+-- componentDidMount
+-- componentDidUpdate
+-- componentWillUnmount
+
 ---
 
-sample useEffect
-different configuration options
+class: middle
+
+```typescript
+import React, { useEffect } from 'react'
+
+const Counter = ({ count }: { count: number }) => {
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+    </div>
+  )
+}
+```
+
+???
+
+- gets called every time when the component gets updated
+
+---
+
+class: middle
+
+```typescript
+// similar to componentDidMount
+useEffect(fn, []);
+```
+
+---
+
+class: middle
+
+```typescript
+// similar to componentDidMount + componentDidUpdate
+useEffect(fn, [counter]);
+```
+
+---
+
+class: middle
+
+```typescript
+// similar to componentWillUnmount
+useEffect(() => {
+  return unmountFn
+}, [counter]);
+```
 
 ---
 
@@ -118,13 +232,49 @@ sample rest loading/error/content
 
 ---
 
+```typescript
+const Stuff = ({ id }: { id: number }) => {
+  const [error, setError] = useState<boolean>(false)
+  const [data, setData] = useState<string | undefined>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setError(false)
+        const result = await axios(`/route/${id}`)
+        setData(result)
+      } catch (e) { setError(true) } 
+    }
+
+    fetchData()
+  }, [id])
+  
+  ...
+}
+```
+
+---
+
+```typescript
+const Stuff = ({ id }: { id: number }) => {
+
+  ...
+
+  return (
+    <>
+      {error && 'Oh noooo'}
+      {data && <p>{data}</p>}
+    </>
+  )
+}
+```
+
+---
+
 class: center middle
 
 ### https://github.com/streamich/react-use
 
----
-
-sample using useAsync
 
 ---
 
@@ -137,22 +287,20 @@ class: impact
 class: center middle
 
 ```react
-const ConfigurationContext = React.createContext<ConfigurationType>(
-  defaultConfiguration
+const ConfigContext = React.createContext<ConfigType>(
+  initConfig
 )
 
-const Configuration = (props: Props) => {
-  const state = useAsync(async (): Promise<ConfigurationType> => {
+const Config = (props: Props) => {
+  const state = useAsync(async (): Promise<ConfigType> => {
     return await configuration()
   }, [])
 
-  const { children } = props
   const { loading, value } = state
-
   return (
-    <ConfigurationContext.Provider value={value || defaultConfiguration}>
-      {!loading && children}
-    </ConfigurationContext.Provider>
+    <ConfigContext.Provider value={value || initConfig}>
+      {!loading && props.children}
+    </ConfigContext.Provider>
   )
 }
 ```
@@ -163,7 +311,7 @@ class: middle
 
 ```typescript
 const useConfig = () =>
-  useContext<ConfigurationType>(ConfigurationContext)
+  useContext<ConfigType>(ConfigContext)
 ```
 
 ---
@@ -173,7 +321,7 @@ class: middle
 ## Consuming context
 
 ```typescript
-const ConfigurationClient = () => {
+const ConfigClient = () => {
   const { country } = useConfig()
   return (
     <>
@@ -196,9 +344,9 @@ const withConfig = <P extends object>(
   class WithConfig extends Component<
     Pick<P, Exclude<keyof P, keyof WithConfigProps>>
   > {
-    static contextType = ConfigurationContext
+    static contextType = ConfigContext
     render() {
-      const config: Configuration = this.context
+      const config: Config = this.context
       const props = { config, ...(this.props as P) }
       return <WrappedComponent {...props} />
     }
@@ -324,4 +472,5 @@ class: middle
 - https://overreacted.io/a-complete-guide-to-useeffect/
 - https://www.robinwieruch.de/react-hooks-fetch-data
 
+---
 
