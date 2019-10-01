@@ -18,32 +18,6 @@ class: impact
 
 ---
 
-# Outline
-
-- react ecosystem in late 2019
-- what are hooks?
-- why use this style?
-
-- useState
-- useEffect
-
-- Examples
--- Load once
--- load on props change
--- async call
--- context
-
-- custom hook
-- react-use
-
-- caveats
--- eslint!
-
-- testing
-- useReducer
-
----
-
 class: middle center
 
 ### Where is React today?
@@ -271,11 +245,8 @@ class: impact
 
 ---
 
-diagram with flow
-
----
-
-sample rest loading/error/content
+class: full-width
+background-image: url(images/rest-flow.jpg)
 
 ---
 
@@ -304,6 +275,30 @@ const Stuff = ({ id }: { id: number }) => {
 
 ---
 
+class: middle
+
+```typescript
+const Stuff = ({ id }: { id: number }) => {
+
+  ...
+
+  return (
+    <>
+      {error && 'Oh noooo'}
+      {data && <p>{data}</p>}
+    </>
+  )
+}
+```
+
+---
+
+class: center middle
+
+### https://github.com/streamich/react-use
+
+---
+
 class: center
 
 ```typescript
@@ -327,47 +322,30 @@ const Stuff = ({ id }: { id: number }) => {
 
 ---
 
-class: center middle
-
-### https://github.com/streamich/react-use
-
----
-
-class: middle
-
-```typescript
-const Stuff = ({ id }: { id: number }) => {
-
-  ...
-
-  return (
-    <>
-      {error && 'Oh noooo'}
-      {data && <p>{data}</p>}
-    </>
-  )
-}
-```
-
----
-
 class: impact
 
 # Case Study: Context
 
 ---
 
-flow diagram
+class: full-height
+background-image: url(images/config-flow.jpg)
 
 ---
 
-class: center
+class: middle
 
 ```react
 const ConfigContext = React.createContext<ConfigType>(
   initConfig
 )
+```
 
+---
+
+class: middle
+
+```react
 const Config = (props: Props) => {
   const state = useAsync(async (): Promise<ConfigType> => {
     return await configuration()
@@ -437,6 +415,77 @@ const withConfig = <P extends object>(
 
 class: impact
 
+# When all you have is a hook ...
+
+---
+
+class: middle
+
+```typescript
+const auth = useMemo<ContextType>(
+  () => ({
+    user,
+    login,
+    logout: () => logout(setUser),
+    checkLogin: () => checkLogin(setUser)
+  }),
+  [user]
+)
+```
+
+---
+
+class: middle
+
+```typescript
+const AddressForm = ({ index }: Props) => {
+  const { formatMessage } = useIntl()
+  return (
+    <div className={styles.body}>
+      <Input
+        name={`addresses.${index}.street`}
+        label={formatMessage({ id: 'address.street' })}
+      />
+    </div>
+  )
+}
+```
+
+---
+
+class: center middle
+
+### useReducer
+![redux](./images/redux.png)
+
+---
+
+class: center middle
+
+### https://www.robinwieruch.de/react-usereducer-hook
+
+---
+
+class: impact
+
+# That's kinda cool, huh?
+
+---
+
+class: center middle
+
+### Consistency
+
+---
+
+class: center middle
+
+### Avoid props pollution
+
+---
+
+class: impact
+
 # Custom Hooks
 
 ---
@@ -457,37 +506,6 @@ const useFieldValues = () => {
 
 - hooks are just functions
 - convention: start with *use*
-
----
-
-class: impact
-
-# Endless options
-
----
-
-useReducer
-useIntl
-useMemo
-useLocalStorage
-
----
-
-class: impact
-
-# Advantages
-
----
-
-class: center middle
-
-### Consistency
-
----
-
-class: center middle
-
-### Avoid props pollution
 
 ---
 
@@ -537,6 +555,62 @@ No need to remember anything, just add the rule to eslint
 
 class: impact
 
+# Are we going to test this?
+
+---
+
+class: center middle
+
+```typescript
+import { waitForElement, render } from '@testing-library/react'
+import RecipeDetails from './RecipeDetails'
+
+jest.mock('recipe-details/recipeDetails.service')
+
+describe('RecipeDetails', () => {
+  it('renders correctly', async () => {
+    const { getByText } = render(<RecipeDetails id={1} />)
+    await waitForElement(() => getByText('Pasta Carbonara'))
+  })
+})
+```
+
+---
+
+class: center middle
+
+```typescript
+import { renderHook, act } from '@testing-library/react-hooks'
+import useCounter from './useCounter'
+
+test('should increment counter', () => {
+  const { result } = renderHook(() => useCounter())
+
+  act(() => {
+    result.current.increment()
+  })
+
+  expect(result.current.count).toBe(1)
+})
+```
+
+---
+
+class: impact
+
+
+# Are hooks ready for prime time?
+
+---
+
+class: center middle
+
+### Yes!
+
+---
+
+class: impact
+
 # Links
 
 ---
@@ -544,9 +618,7 @@ class: impact
 class: middle
 
 - https://reactjs.org/docs/hooks-intro.html
-- https://medium.com/@dan_abramov/making-sense-of-react-hooks-fdbde8803889
 - https://wattenberger.com/blog/react-hooks
-- https://overreacted.io/a-complete-guide-to-useeffect/
 - https://www.robinwieruch.de/react-hooks-fetch-data
 
 ---
