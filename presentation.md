@@ -103,6 +103,28 @@ const Counter = () => {
 
 ---
 
+```typescript
+class Counter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { count: 0 }
+  }
+
+  render() {
+    return (
+      <div>
+        <p>You clicked {this.state.count} times</p>
+        <button onClick={() => this.setState({count:this.state.count+1})}>
+          Click me
+        </button>
+      </div>
+    )
+  }
+}
+```
+
+---
+
 class: center middle
 
 ### https://dev.to/dan_abramov/making-sense-of-react-hooks-2eib
@@ -143,6 +165,7 @@ class: center middle
 
 ???
 
+- eslint started telling me that I should use componentDidMount instead of componentWillMount
 - lifecycle methods seem like the most complex part of React
 
 
@@ -165,9 +188,9 @@ class: center middle
 ???
 
 - alternative to:
--- componentDidMount
--- componentDidUpdate
--- componentWillUnmount
+ - componentDidMount
+ - componentDidUpdate
+ - componentWillUnmount
 
 ---
 
@@ -242,6 +265,10 @@ class: center middle
 class: impact
 
 # Case Study: REST populated component
+
+???
+
+- In my latest project, we have been using hooks to manage state and side effects
 
 ---
 
@@ -324,12 +351,22 @@ const Stuff = ({ id }: { id: number }) => {
 
 class: impact
 
-# Case Study: Context
+# Case Study: Configuration
 
 ---
 
 class: full-height
 background-image: url(images/config-flow.jpg)
+
+---
+
+class: center middle
+
+### https://reactjs.org/docs/context.html
+
+???
+
+- context api as an alternative to pass data in a deep hierarchy
 
 ---
 
@@ -433,6 +470,10 @@ const auth = useMemo<ContextType>(
 )
 ```
 
+???
+
+- basically replaces `reselect`
+
 ---
 
 class: middle
@@ -453,19 +494,6 @@ const AddressForm = ({ index }: Props) => {
 
 ---
 
-class: center middle
-
-### useReducer
-![redux](./images/redux.png)
-
----
-
-class: center middle
-
-### https://www.robinwieruch.de/react-usereducer-hook
-
----
-
 class: impact
 
 # That's kinda cool, huh?
@@ -481,6 +509,25 @@ class: center middle
 class: center middle
 
 ### Avoid props pollution
+
+---
+
+class: impact
+
+# The elephant in the room
+
+---
+
+class: center middle
+
+### useReducer
+![redux](./images/redux.png)
+
+---
+
+class: center middle
+
+### https://www.robinwieruch.de/react-usereducer-hook
 
 ---
 
