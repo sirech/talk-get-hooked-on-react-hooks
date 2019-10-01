@@ -12,6 +12,10 @@ class: impact
 # {{title}}
 ## Mario Fernandez
 
+???
+
+- outline: where are we, what are hooks, why use them, intro, patterns
+
 ---
 
 # Outline
@@ -36,16 +40,17 @@ class: impact
 -- eslint!
 
 - testing
+- useReducer
 
 ---
 
 class: middle center
 
-### It's not 2018 anymore
+### Where is React today?
 
 ---
 
-class: middle
+class: center middle
 
 ## Times They Are a-Changin
 
@@ -59,6 +64,17 @@ class: middle
 
 .col-4[
 ![react-testing-library](images/react-testing-library.png)
+]
+
+---
+
+class: center middle
+
+.col-6[
+![react](images/react.png)
+]
+.col-6[
+![hook](images/hook.png)
 ]
 
 ---
@@ -113,6 +129,12 @@ const Counter = () => {
 
 ---
 
+class: center middle
+
+### https://dev.to/dan_abramov/making-sense-of-react-hooks-2eib
+
+---
+
 class: impact
 
 # Why hooks?
@@ -132,22 +154,23 @@ class: center middle
 
 class: center middle
 
+### Encapsulate stateful logic
+
+???
+
+- replace complex solutions like render props or HOC
+- avoid changing component hierarchy
+
+---
+
+class: center middle
+
 ### Does anybody truly understand lifecycle methods?
 
 ???
 
 - lifecycle methods seem like the most complex part of React
 
----
-
-class: center middle
-
-### Encapsulate stateful logic
-
-???
-
-- replace complex solutions like render props or HOC
-- avoid changing componen hierarchy
 
 ---
 
@@ -157,7 +180,16 @@ class: impact
 
 ???
 
-- perform side effects
+- second main hook to learn
+
+---
+
+class: center middle
+
+### perform side effects
+
+???
+
 - alternative to:
 -- componentDidMount
 -- componentDidUpdate
@@ -196,6 +228,11 @@ class: middle
 useEffect(fn, []);
 ```
 
+
+???
+
+- second argument is dependency array
+
 ---
 
 class: middle
@@ -218,6 +255,16 @@ useEffect(() => {
 
 ---
 
+class: center middle
+
+### https://overreacted.io/a-complete-guide-to-useeffect/
+
+???
+
+- `useEffect` has a lot of subtle details
+
+---
+
 class: impact
 
 # Case Study: REST populated component
@@ -231,6 +278,8 @@ diagram with flow
 sample rest loading/error/content
 
 ---
+
+class: center
 
 ```typescript
 const Stuff = ({ id }: { id: number }) => {
@@ -255,6 +304,37 @@ const Stuff = ({ id }: { id: number }) => {
 
 ---
 
+class: center
+
+```typescript
+import { useAsync } from 'react-use'
+
+const Stuff = ({ id }: { id: number }) => {
+  const { loading, error, value } = useAsync(async () => {
+    const result = await axios(`/route/${id}`)
+    return result
+  }, [id])
+
+  return (
+    <>
+      {loading && 'Loading...'}
+      {error && 'Oh noooo'}
+      {value && <p>{value}</p>}
+    </>
+  )
+}
+```
+
+---
+
+class: center middle
+
+### https://github.com/streamich/react-use
+
+---
+
+class: middle
+
 ```typescript
 const Stuff = ({ id }: { id: number }) => {
 
@@ -271,20 +351,17 @@ const Stuff = ({ id }: { id: number }) => {
 
 ---
 
-class: center middle
-
-### https://github.com/streamich/react-use
-
-
----
-
 class: impact
 
 # Case Study: Context
 
 ---
 
-class: center middle
+flow diagram
+
+---
+
+class: center
 
 ```react
 const ConfigContext = React.createContext<ConfigType>(
