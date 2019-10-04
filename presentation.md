@@ -22,6 +22,11 @@ class: middle center
 
 ### Where is React today?
 
+???
+
+- I asked myself the same question when I came back to react
+- Things move really fast
+
 ---
 
 class: center middle
@@ -123,11 +128,19 @@ class Counter extends React.Component {
 }
 ```
 
+???
+
+- for comparison, this is the old style, using classes
+
 ---
 
 class: center middle
 
 ### https://dev.to/dan_abramov/making-sense-of-react-hooks-2eib
+
+???
+
+- more context about the reasons that led to hooks
 
 ---
 
@@ -300,6 +313,11 @@ const Stuff = ({ id }: { id: number }) => {
 }
 ```
 
+???
+
+- smaller pieces of state, each with its own `useState`
+- defining function inside effect, and then call it (no async)
+
 ---
 
 class: middle
@@ -318,11 +336,21 @@ const Stuff = ({ id }: { id: number }) => {
 }
 ```
 
+???
+
+- we have this pattern all over our app
+- how to avoid duplication?
+
 ---
 
 class: center middle
 
 ### https://github.com/streamich/react-use
+
+???
+
+- no need to reinvent the wheel
+- shows the composable nature of hooks
 
 ---
 
@@ -347,6 +375,11 @@ const Stuff = ({ id }: { id: number }) => {
 }
 ```
 
+???
+
+- using a custom hook (will get to that)
+- encapsulate pattern, only a function to fetch data needs to be provided
+
 ---
 
 class: impact
@@ -357,6 +390,11 @@ class: impact
 
 class: full-height
 background-image: url(images/config-flow.jpg)
+
+???
+
+- global configuration, maybe fetched from remote
+- needs to be accessed deep down in the hierarchy
 
 ---
 
@@ -406,6 +444,10 @@ const useConfig = () =>
   useContext<ConfigType>(ConfigContext)
 ```
 
+???
+
+- use a hook for the consumer
+
 ---
 
 class: middle
@@ -422,6 +464,11 @@ const ConfigClient = () => {
   )
 }
 ```
+
+???
+
+- convenient and consistent
+- let's compare it to the old way
 
 ---
 
@@ -453,6 +500,10 @@ const withConfig = <P extends object>(
 class: impact
 
 # When all you have is a hook ...
+
+???
+
+- we realized that we are adopting hooks for more and more scenarios 
 
 ---
 
@@ -492,11 +543,19 @@ const AddressForm = ({ index }: Props) => {
 }
 ```
 
+???
+
+- many libraries, such as react-intl, bring their own hooks to the table
+
 ---
 
 class: impact
 
 # That's kinda cool, huh?
+
+???
+
+- other benefits of using hooks, apart from the ones I mentioned in the beginning
 
 ---
 
@@ -523,6 +582,12 @@ class: center middle
 ### useReducer
 ![redux](./images/redux.png)
 
+???
+
+- you can actually use reducers with hooks
+- you have dispatch function that can be passed around, or stored in the context
+- you don't have a global store or middleware, like in redux
+
 ---
 
 class: center middle
@@ -534,6 +599,10 @@ class: center middle
 class: impact
 
 # Custom Hooks
+
+???
+
+- the natural evolution is to pack your custom domain logic in reusable hooks
 
 ---
 
@@ -604,6 +673,10 @@ class: impact
 
 # Are we going to test this?
 
+???
+
+- because we actually test stuff
+
 ---
 
 class: center middle
@@ -621,6 +694,11 @@ describe('RecipeDetails', () => {
   })
 })
 ```
+
+???
+
+- If you are using `react-testing-library`, no need to change anything
+- `enzyme` is not supposed to play very well with hooks
 
 ---
 
@@ -640,6 +718,11 @@ test('should increment counter', () => {
   expect(result.current.count).toBe(1)
 })
 ```
+
+???
+
+- hooks can be tested separately by adding this package
+- shouldn't be really needed unless building custom hooks for very different use cases
 
 ---
 
